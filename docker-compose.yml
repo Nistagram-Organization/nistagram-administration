@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  nistagram-administration-db:
+    container_name: nistagram-administration-db
+    image: mysql:8.0.19
+    restart: always
+    ports:
+      - 3306
+    command: '--default-authentication-plugin=mysql_native_password'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 3s
+      retries: 5
+      start_period: 30s
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nistagramadministrationschema
+
+  nistagram-administration:
+    container_name: nistagram-administration
+    build:
+      context: .
+    depends_on:
+      nistagram-administration-db:
+          condition: service_healthy
+    environment:
+      - mysql_username=root
+      - mysql_password=root
+      - mysql_host=nistagram-administration-db:3306
+      - mysql_schema=nistagramadministrationschema
