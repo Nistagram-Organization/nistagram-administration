@@ -1,7 +1,9 @@
 package application
 
 import (
-	"github.com/Nistagram-Organization/nistagram-administration/src/datasources/mysql"
+	"github.com/Nistagram-Organization/nistagram-administration/src/clients/auth_grpc_client"
+	administration2 "github.com/Nistagram-Organization/nistagram-administration/src/controllers/administration"
+	"github.com/Nistagram-Organization/nistagram-administration/src/services/administration"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -11,12 +13,16 @@ var (
 )
 
 func StartApplication() {
-	router.Use(cors.Default())
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AddAllowHeaders("Authorization")
+	router.Use(cors.New(corsConfig))
 
-	database := mysql.NewMySqlDatabaseClient()
-	if err := database.Init(); err != nil {
-		panic(err)
-	}
+	authGrpcClient := auth_grpc_client.NewAuthGrpcClient()
+	administrationService := administration.NewAdministrationService(authGrpcClient)
+	administrationController := administration2.NewAdministrationController(administrationService)
+
+	router.DELETE("/administration/users/terminate", administrationController.TerminateProfile)
 
 	router.Run(":8088")
 }
