@@ -3,7 +3,7 @@ module github.com/Nistagram-Organization/nistagram-administration
 go 1.16
 
 require (
-	github.com/Nistagram-Organization/nistagram-shared v0.0.0-20210701153624-d7d18b83bd33
+	github.com/Nistagram-Organization/nistagram-shared v0.0.0-20210704161721-afef761af279
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.2
 	google.golang.org/grpc v1.38.0

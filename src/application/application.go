@@ -2,6 +2,7 @@ package application
 
 import (
 	"github.com/Nistagram-Organization/nistagram-administration/src/clients/auth_grpc_client"
+	"github.com/Nistagram-Organization/nistagram-administration/src/clients/post_grpc_client"
 	administration2 "github.com/Nistagram-Organization/nistagram-administration/src/controllers/administration"
 	"github.com/Nistagram-Organization/nistagram-administration/src/services/administration"
 	"github.com/gin-contrib/cors"
@@ -19,10 +20,11 @@ func StartApplication() {
 	router.Use(cors.New(corsConfig))
 
 	authGrpcClient := auth_grpc_client.NewAuthGrpcClient()
-	administrationService := administration.NewAdministrationService(authGrpcClient)
+	postGrpcClient := post_grpc_client.NewPostGrpcClient()
+	administrationService := administration.NewAdministrationService(authGrpcClient, postGrpcClient)
 	administrationController := administration2.NewAdministrationController(administrationService)
 
-	router.DELETE("/administration/users/terminate", administrationController.TerminateProfile)
+	router.POST("/administration/content", administrationController.DecideOnPost)
 
 	router.Run(":8088")
 }
