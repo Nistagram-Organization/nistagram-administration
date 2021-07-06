@@ -5,6 +5,7 @@ import (
 	"github.com/Nistagram-Organization/nistagram-administration/src/clients/post_grpc_client"
 	administration2 "github.com/Nistagram-Organization/nistagram-administration/src/controllers/administration"
 	"github.com/Nistagram-Organization/nistagram-administration/src/services/administration"
+	"github.com/Nistagram-Organization/nistagram-shared/src/utils/prometheus_handler"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +26,8 @@ func StartApplication() {
 	administrationController := administration2.NewAdministrationController(administrationService)
 
 	router.POST("/administration/content", administrationController.DecideOnPost)
+
+	router.GET("/metrics", prometheus_handler.PrometheusGinHandler())
 
 	router.Run(":8088")
 }
