@@ -8,7 +8,7 @@ import (
 )
 
 type AdministrationService interface {
-	DecideOnPost(inappropriate_post_report_decision.InappropriatePostReportDecision) (uint, rest_error.RestErr)
+	DecideOnPost(*inappropriate_post_report_decision.InappropriatePostReportDecision) (uint, rest_error.RestErr)
 }
 
 type administrationService struct {
@@ -23,7 +23,7 @@ func NewAdministrationService(authGrpcClient auth_grpc_client.AuthGrpcClient, po
 	}
 }
 
-func (s *administrationService) DecideOnPost(decision inappropriate_post_report_decision.InappropriatePostReportDecision) (uint, rest_error.RestErr) {
+func (s *administrationService) DecideOnPost(decision *inappropriate_post_report_decision.InappropriatePostReportDecision) (uint, rest_error.RestErr) {
 	if err := decision.Validate(); err != nil {
 		return 0, err
 	}
