@@ -5,6 +5,7 @@ import (
 	"github.com/Nistagram-Organization/nistagram-administration/src/clients/post_grpc_client"
 	administration2 "github.com/Nistagram-Organization/nistagram-administration/src/controllers/administration"
 	"github.com/Nistagram-Organization/nistagram-administration/src/services/administration"
+	"github.com/Nistagram-Organization/nistagram-shared/src/utils/jwt_utils"
 	"github.com/Nistagram-Organization/nistagram-shared/src/utils/prometheus_handler"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,7 @@ func StartApplication() {
 	administrationService := administration.NewAdministrationService(authGrpcClient, postGrpcClient)
 	administrationController := administration2.NewAdministrationController(administrationService)
 
-	router.POST("/administration/content", administrationController.DecideOnPost)
+	router.POST("/administration/content", jwt_utils.GetJwtMiddleware(), jwt_utils.CheckRoles([]string{"admin"}), administrationController.DecideOnPost)
 
 	router.GET("/metrics", prometheus_handler.PrometheusGinHandler())
 
