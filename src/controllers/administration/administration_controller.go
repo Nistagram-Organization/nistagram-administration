@@ -30,7 +30,7 @@ func (c *administrationController) DecideOnPost(ctx *gin.Context) {
 		return
 	}
 
-	id, err := c.AdministrationService.DecideOnPost(&reportDecision)
+	id, err := c.AdministrationService.DecideOnPost(reportDecision)
 	if err != nil {
 		ctx.JSON(err.Status(), err)
 		return

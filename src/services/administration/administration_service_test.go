@@ -41,7 +41,7 @@ func (suite *AdministrationServiceUnitTestsSuite) TestAdministrationService_Deci
 	}
 	err := rest_error.NewBadRequestError("Cannot terminate author's profile and not delete reported post")
 
-	_, decideErr := suite.service.DecideOnPost(&decision)
+	_, decideErr := suite.service.DecideOnPost(decision)
 
 	assert.Equal(suite.T(), err, decideErr)
 }
@@ -58,7 +58,7 @@ func (suite *AdministrationServiceUnitTestsSuite) TestAdministrationService_Deci
 
 	suite.postGrpcClientMock.On("DecideOnPost", decision.PostID, decision.Delete).Return(errGrpc).Once()
 
-	_, decideErr := suite.service.DecideOnPost(&decision)
+	_, decideErr := suite.service.DecideOnPost(decision)
 
 	assert.Equal(suite.T(), err, decideErr)
 }
@@ -77,7 +77,7 @@ func (suite *AdministrationServiceUnitTestsSuite) TestAdministrationService_Deci
 	suite.postGrpcClientMock.On("DecideOnPost", decision.PostID, decision.Delete).Return(nil).Once()
 	suite.authGrpcClientMock.On("TerminateProfile", decision.AuthorEmail).Return(errGrpc).Once()
 
-	_, decideErr := suite.service.DecideOnPost(&decision)
+	_, decideErr := suite.service.DecideOnPost(decision)
 
 	assert.Equal(suite.T(), err, decideErr)
 }
@@ -93,7 +93,7 @@ func (suite *AdministrationServiceUnitTestsSuite) TestAdministrationService_Deci
 	suite.postGrpcClientMock.On("DecideOnPost", decision.PostID, decision.Delete).Return(nil).Once()
 	suite.authGrpcClientMock.On("TerminateProfile", decision.AuthorEmail).Return(nil).Once()
 
-	retVal, decideErr := suite.service.DecideOnPost(&decision)
+	retVal, decideErr := suite.service.DecideOnPost(decision)
 
 	assert.Equal(suite.T(), decision.PostID, retVal)
 	assert.Equal(suite.T(), nil, decideErr)
